@@ -242,6 +242,9 @@ public class DE {
                 if (Math.random() < this.crossoverProbability) {
                     // Using strategy "DE/best/1/bin with jitter" as in R's DEoptim package (strategy==3):
                     trial[index] = this.bestCandidate[index] + this.weight * (Math.random() + 0.0001) * (this.population[r1][index] - this.population[r2][index]);
+
+                    // Using strategy "DE/local-to-best/1/bin" as in R's DEoptim package (strategy==2):
+                    // trial[index] += this.weight *  (this.population[r1][index] - this.population[r2][index]) + this.weight * (this.bestCandidate[index] - trial[index]);
                 }
 
                 // Update index:
