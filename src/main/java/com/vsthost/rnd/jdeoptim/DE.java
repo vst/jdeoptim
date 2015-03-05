@@ -367,7 +367,7 @@ public class DE {
 
         // Find the best score and update values:
         for (int i = 0; i < array.length; i++) {
-            if (array[i] < min) {
+            if (array[i] <= min) {
                 min = array[i];
                 index = i;
             }
