@@ -251,6 +251,18 @@ public class DE {
                 index = (index + 1) % dimension;
             }
 
+//            // Apply limits with reflection:
+//            for (int i = 0; i < this.lowerLimit.length; i++) {
+//                // Check lower limit:
+//                if (trial[i] < this.lowerLimit[i]) {
+//                    trial[i] = this.lowerLimit[i] + trial[i];
+//                }
+//                // Check upper limit:
+//                else if (trial[i] > this.upperLimit[i]) {
+//                    trial[i] = this.upperLimit[i] - trial[i];
+//                }
+//            }
+
             // Apply limits:
             for (int i = 0; i < this.lowerLimit.length; i++) {
                 // Check lower limit:
