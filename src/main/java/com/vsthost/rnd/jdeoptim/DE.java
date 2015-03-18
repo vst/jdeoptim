@@ -160,6 +160,63 @@ public class DE {
     }
 
     /**
+     * Constructor for the differential evolution algorithm runner.
+     *
+     * @param function The objective function
+     * @param lowerLimit Lower limits
+     * @param upperLimit Upper limits
+     * @param iterations The number of iterations
+     * @param initialPopulation Initial population
+     * @param crossoverProbability The crossover probability
+     * @param weight The weight for deviations
+     * @param logging Flag indivating if we are logging or not
+     */
+    public DE(ObjectiveFunction function, double[] lowerLimit, double[] upperLimit, int iterations, double[][] initialPopulation, double crossoverProbability, double weight, boolean logging) {
+        // Set the function:
+        this.function = function;
+
+        // Check upper/lower limit lengths:
+        if (lowerLimit.length == 0 || lowerLimit.length != upperLimit.length) {
+            throw new RuntimeException("Limit lengths should match each other and must be bigger than 0.");
+        }
+
+        // Check if lower limits are less than or equal to upper limits:
+        for (int i = 0; i < lowerLimit.length; i++) {
+            if (lowerLimit[i] > upperLimit[i]) {
+                throw new RuntimeException("Lower limit cannot be greater than the corresponding upper limit.");
+            }
+        }
+
+        // Set limits:
+        this.lowerLimit = lowerLimit;
+        this.upperLimit = upperLimit;
+
+        // Set the dimension:
+        this.dimension = this.lowerLimit.length;
+
+        // Set the population:
+        this.population = initialPopulation;
+
+        // Set the population size:
+        this.populationSize = initialPopulation.length;
+
+        // Set the number of iterations:
+        this.iterations = iterations;
+
+        // Set the crossover probability:
+        this.crossoverProbability = crossoverProbability;
+
+        // Set the weight:
+        this.weight = weight;
+
+        // Set the logging flag:
+        this.logging = logging;
+
+        // Initialize:
+        this.initialize();
+    }
+
+    /**
      * Initializes the evolution algorithm.
      */
     private void initialize () {
@@ -171,6 +228,7 @@ public class DE {
      * Initializes the population.
      */
     private void initializePopulation () {
+        System.out.println("Generating population...");
         // Initialize the population:
         this.population = new double[this.populationSize][dimension];
 
@@ -304,7 +362,9 @@ public class DE {
         this.timeStarted = System.currentTimeMillis();
 
         // Initialize the first population:
-        this.initializePopulation();
+        if (this.population == null) {
+            this.initializePopulation();
+        }
 
         // Initialize the array of scores to be used at each iteration with the current population:
         this.scores = new double[this.populationSize];
@@ -390,5 +450,9 @@ public class DE {
 
         // Done, return:
         return index;
+    }
+
+    public double getBestScore() {
+        return bestScore;
     }
 }
