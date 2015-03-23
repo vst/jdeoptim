@@ -16,8 +16,12 @@
 
 package com.vsthost.rnd.jdeoptim;
 
+import org.apache.commons.math3.distribution.UniformIntegerDistribution;
+import org.apache.commons.math3.distribution.UniformRealDistribution;
+import org.apache.commons.math3.random.MersenneTwister;
+import org.apache.commons.math3.random.RandomGenerator;
+
 import java.util.Arrays;
-import java.util.Random;
 
 /**
  * Defines a differential evolution algorithm class.
@@ -104,6 +108,11 @@ public class DE {
      * Defines the finish timestamp of the run.
      */
     private long timeFinished;
+
+    /**
+     * Defines the random number generator.
+     */
+    private RandomGenerator randomGenerator = new MersenneTwister();
 
     /**
      * Constructor for the differential evolution algorithm runner.
@@ -216,6 +225,14 @@ public class DE {
         this.initialize();
     }
 
+    public RandomGenerator getRandomGenerator() {
+        return randomGenerator;
+    }
+
+    public void setRandomGenerator(RandomGenerator randomGenerator) {
+        this.randomGenerator = randomGenerator;
+    }
+
     /**
      * Initializes the evolution algorithm.
      */
@@ -277,6 +294,11 @@ public class DE {
         // Declare and initialize the new population scores:
         double[] newScores = new double[this.populationSize];
 
+        // Define a uniform distribution:
+        UniformIntegerDistribution distributionForCol = new UniformIntegerDistribution(this.randomGenerator, 0, this.dimension - 1);
+        UniformIntegerDistribution distributionForRow = new UniformIntegerDistribution(this.randomGenerator, 0, this.populationSize - 1);
+        UniformRealDistribution distributionForCO = new UniformRealDistribution(this.randomGenerator, 0, 1);
+
         // Iterate over the current population:
         for (int c = 0; c < this.populationSize; c++) {
             // Get the candidate as the base of the next candidate (a.k.a. trial):
@@ -285,21 +307,21 @@ public class DE {
             // TODO: Implement all strategies.
 
             // Pick a random index from the dimension to start with:
-            int index = new Random().nextInt(this.dimension);
+            int index = distributionForCol.sample();
 
             // Get 2 elements from the population which are distinct:
             int r1 = -1, r2 = -1;
             while (c == r1 || c == r2 || r1 == r2) {
-                r1 = new Random().nextInt(this.populationSize);
-                r2 = new Random().nextInt(this.populationSize);
+                r1 = distributionForRow.sample();
+                r2 = distributionForRow.sample();
             }
 
             // Iterate over dimensions and do stuff:
             for (int _i = 0; _i < this.dimension; _i++) {
                 // To crossover or not to crossover:
-                if (Math.random() < this.crossoverProbability) {
+                if (distributionForCO.sample() < this.crossoverProbability) {
                     // Using strategy "DE/best/1/bin with jitter" as in R's DEoptim package (strategy==3):
-                    trial[index] = this.bestCandidate[index] + this.weight * (Math.random() + 0.0001) * (this.population[r1][index] - this.population[r2][index]);
+                    trial[index] = this.bestCandidate[index] + this.weight * (distributionForCO.sample() + 0.0001) * (this.population[r1][index] - this.population[r2][index]);
 
                     // Using strategy "DE/local-to-best/1/bin" as in R's DEoptim package (strategy==2):
                     // trial[index] += this.weight *  (this.population[r1][index] - this.population[r2][index]) + this.weight * (this.bestCandidate[index] - trial[index]);
