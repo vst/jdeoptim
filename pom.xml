@@ -23,7 +23,30 @@
     <packaging>jar</packaging>
 
     <name>jdeoptim</name>
-    <url>http://maven.apache.org</url>
+    <description>Provides differential evolution algorithm implementation for optimizing real-valued functions with real-value parameters</description>
+    <url>https://github.com/vst/jdeoptim</url>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Vehbi Sinan Tunalioglu</name>
+            <email>vst@vsthost.com</email>
+            <organization>The Negation</organization>
+            <organizationUrl>http://www.thenegation.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:vehbisinan/jdeoptim.git</connection>
+        <developerConnection>scm:git:git@github.com:vehbisinan/jdeoptim.git</developerConnection>
+        <url>git@github.com:vehbisinan/jdeoptim.git</url>
+    </scm>
 
     <properties>
         <!-- Define the source encoding for the build -->
@@ -51,4 +74,34 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
