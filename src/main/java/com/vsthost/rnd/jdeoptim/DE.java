@@ -375,9 +375,7 @@ public class DE {
     }
 
     /**
-     * Runs the evolutionary algorithm and returns the best candidate.
-     *
-     * @return The best candidate as an array of double values.
+     * Runs the evolutionary algorithm and sets the best candidate.
      */
     public void run() {
         // Mark the start time:
@@ -474,6 +472,11 @@ public class DE {
         return index;
     }
 
+    /**
+     * Returns the best score.
+     *
+     * @return The best score.
+     */
     public double getBestScore() {
         return bestScore;
     }
