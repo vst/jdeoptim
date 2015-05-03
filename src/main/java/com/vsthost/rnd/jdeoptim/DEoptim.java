@@ -37,9 +37,9 @@ public class DEoptim {
     final private Problem problem;
 
     /**
-     * Defines the objective function to calculate fitness scores.
+     * Defines the objective objective to calculate fitness scores.
      */
-    final private Objective function;
+    final private Objective objective;
 
     /**
      * Defines the strategy for the evolution of population.
@@ -63,17 +63,18 @@ public class DEoptim {
      * as static builders are going to be used for convenience reasons. All the arguments to this
      * method will then safely be final as there will be no setters for these.</p>
      *
-     * @param iterations Defines the number of iterations.
-     * @param problem Defines the problem to be solved.
-     * @param function Defines the objective function as a fitness score calculator.
-     * @param strategy Defines the population evolution strategy.
-     * @param population Defines the initial population to start with.
+     * @param iterations The number of iterations.
+     * @param problem The problem to be solved.
+     * @param objective The objective as a fitness score calculator.
+     * @param strategy The population evolution strategy.
+     * @param population The initial population to start with.
+     * @param diagnostics The diagnostics instance.
      */
-    public DEoptim(int iterations, Problem problem, Objective function, Strategy strategy, Population population, Diagnostics diagnostics) {
+    public DEoptim(int iterations, Problem problem, Objective objective, Strategy strategy, Population population, Diagnostics diagnostics) {
         // Save object fields:
         this.iterations = iterations;
         this.problem = problem;
-        this.function = function;
+        this.objective = objective;
         this.strategy = strategy;
         this.population = population;
         this.diagnostics = diagnostics;
@@ -106,7 +107,7 @@ public class DEoptim {
                 this.population.setScore(i, Double.POSITIVE_INFINITY);
             } else {
                 // Good to go! Calculate and set the score:
-                this.population.setScore(i, this.function.apply(member));
+                this.population.setScore(i, this.objective.apply(member));
             }
         }
 
@@ -116,7 +117,7 @@ public class DEoptim {
             this.diagnostics.iterationStarted(iteration);
 
             // Re-generate the population using the strategy:
-            this.strategy.regenerate(this.population, this.problem, this.function);
+            this.strategy.regenerate(this.population, this.problem, this.objective);
 
             // Tell diagnostics that we are finished with this iteration:
             this.diagnostics.iterationFinished(iteration, this.population);

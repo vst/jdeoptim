@@ -61,7 +61,7 @@ public class SimpleStrategy implements Strategy {
     }
 
     @Override
-    public void regenerate(Population population, Problem problem, Objective function) {
+    public void regenerate(Population population, Problem problem, Objective objective) {
         // Get the best member of the population:
         final double[] bestMember = population.getBestMember();
 
@@ -109,7 +109,7 @@ public class SimpleStrategy implements Strategy {
             // OK, we are done with the trial. We will now check if we have a
             // better candidate. If yes, we will replace the old member with the trial,
             // if not we will just skip. Compute the score:
-            final double newScore = function.apply(trial);
+            final double newScore = objective.apply(trial);
 
             // Check the new score against the old one and act accordingly:
             if (newScore < oldScore) {

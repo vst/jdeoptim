@@ -131,6 +131,7 @@ public class Utils {
      * @param set The set to be chosen from.
      * @param n The number of elements to be returned.
      * @param exclude Elements to be excluded.
+     * @param randomGenerator The random number generator.
      * @return Random elements.
      */
     public static int[] pickRandom(int[] set, int n, int[] exclude, RandomGenerator randomGenerator) {

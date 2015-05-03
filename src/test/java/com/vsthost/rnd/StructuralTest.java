@@ -35,7 +35,7 @@ import static org.junit.Assert.assertTrue;
 public class StructuralTest {
 
     /**
-     * Defines a silly formula
+     * Defines a silly formula to be used in the objectives.
      *
      * @param x X
      * @param y Y
@@ -50,8 +50,8 @@ public class StructuralTest {
         // Create an instance of a problem:
         Problem problem = new Problem(new double[] {-1, -1}, new double[]{1, 1});
 
-        // Define an objective function:
-        Objective function = new Objective() {
+        // Define an objective:
+        Objective objective = new Objective() {
             @Override
             public double apply(double[] candidate) {
                 // Calculate the score and return:
@@ -62,7 +62,7 @@ public class StructuralTest {
         // Define a strategy:
         Strategy strategy = new Strategy() {
             @Override
-            public void regenerate(Population population, Problem problem, Objective function) {
+            public void regenerate(Population population, Problem problem, Objective objective) {
                 // Do nothing for now...
             }
         };
@@ -74,7 +74,7 @@ public class StructuralTest {
         Diagnostics diagnostics = new Diagnostics(true, true);
 
         // Define the DE instance:
-        DEoptim DEoptim = new DEoptim(10, problem, function, strategy, population, diagnostics);
+        DEoptim DEoptim = new DEoptim(10, problem, objective, strategy, population, diagnostics);
 
         // Run it:
         DEoptim.evolve();
@@ -85,8 +85,8 @@ public class StructuralTest {
         // Create an instance of a problem:
         Problem problem = new Problem(new double[] {-1, -1}, new double[]{1, 1});
 
-        // Define an objective function:
-        Objective function = new Objective() {
+        // Define an objective:
+        Objective objective = new Objective() {
             @Override
             public double apply(double[] candidate) {
                 return Math.abs(SillyFormula(candidate[0], candidate[1]));
@@ -103,7 +103,7 @@ public class StructuralTest {
         Diagnostics diagnostics = new Diagnostics(true, true);
 
         // Define the DE instance:
-        DEoptim DEoptim = new DEoptim(10, problem, function, strategy, population, diagnostics);
+        DEoptim DEoptim = new DEoptim(10, problem, objective, strategy, population, diagnostics);
 
         // Run it:
         DEoptim.evolve();

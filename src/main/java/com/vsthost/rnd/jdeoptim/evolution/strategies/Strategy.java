@@ -28,7 +28,8 @@ public interface Strategy {
      * Re-generates the population within the context.
      *
      * @param population The population to be re-generated.
-     * @param function The objective function to calculate scores.
+     * @param problem The problem definition.
+     * @param objective The objective objective to calculate scores.
      */
-    public void regenerate(Population population, Problem problem, Objective function);
+    public void regenerate(Population population, Problem problem, Objective objective);
 }
