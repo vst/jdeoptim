@@ -51,21 +51,10 @@ public class StructuralTest {
         Problem problem = new Problem(new double[] {-1, -1}, new double[]{1, 1});
 
         // Define an objective:
-        Objective objective = new Objective() {
-            @Override
-            public double apply(double[] candidate) {
-                // Calculate the score and return:
-                return Math.abs(SillyFormula(candidate[0], candidate[1]));
-            }
-        };
+        Objective objective = candidate -> Math.abs(SillyFormula(candidate[0], candidate[1]));
 
-        // Define a strategy:
-        Strategy strategy = new Strategy() {
-            @Override
-            public void regenerate(Population population, Problem problem, Objective objective) {
-                // Do nothing for now...
-            }
-        };
+        // Define an empty strategy:
+        Strategy strategy = (population, problem1, objective1) -> {};
 
         // Initialize a population:
         Population population = new Population(100, 2, new double[] {-1, -1}, new double[]{1, 1}, new UniformRealDistribution());
@@ -86,12 +75,7 @@ public class StructuralTest {
         Problem problem = new Problem(new double[] {-1, -1}, new double[]{1, 1});
 
         // Define an objective:
-        Objective objective = new Objective() {
-            @Override
-            public double apply(double[] candidate) {
-                return Math.abs(SillyFormula(candidate[0], candidate[1]));
-            }
-        };
+        Objective objective = candidate -> Math.abs(SillyFormula(candidate[0], candidate[1]));
 
         // Define a strategy:
         Strategy strategy = new SimpleStrategy(0.75, 0.8, new MersenneTwister());

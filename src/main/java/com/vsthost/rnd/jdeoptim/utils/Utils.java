@@ -24,8 +24,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.IntConsumer;
-import java.util.function.IntPredicate;
+import java.util.stream.IntStream;
 
 /**
  * Provides some utility functions used throughout the library.
@@ -73,7 +72,7 @@ public class Utils {
      */
     public static int[] order(final double[] values) {
         // Initialize the return vector:
-        Integer[] vector = Utils.sequence(values.length);
+        Integer[] vector = Utils.toObject(Utils.sequence(values.length));
 
         // Order:
         Arrays.sort(vector, new Comparator<Integer>() {
@@ -93,12 +92,22 @@ public class Utils {
      * @param length The length of the sequence.
      * @return A sequence starting with 0 and ending with <code>length - 1</code>.
      */
-    public static Integer[] sequence(int length) {
+    public static int[] sequence(int length) {
+        return IntStream.range(0, length).toArray();
+    }
+
+    /**
+     * Converts an int array into an Integer array.
+     *
+     * @param values Primitive int array.
+     * @return Integer array.
+     */
+    public static Integer[] toObject(int[] values) {
         // Initialize the return vector:
-        Integer[] vector = new Integer[length];
+        Integer[] vector = new Integer[values.length];
 
         // Set values:
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < vector.length; i++) {
             vector[i] = i;
         }
 
@@ -137,20 +146,10 @@ public class Utils {
     public static int[] pickRandom(int[] set, int n, int[] exclude, RandomGenerator randomGenerator) {
         // Create a set from excluded:
         final Set<Integer> toExclude = new HashSet();
-        Arrays.stream(exclude).forEach(new IntConsumer() {
-            @Override
-            public void accept(int value) {
-                toExclude.add(value);
-            }
-        });
+        Arrays.stream(exclude).forEach(value -> toExclude.add(value));
 
         // Create set out of elements:
-        int[] newSet = Arrays.stream(set).filter(new IntPredicate() {
-            @Override
-            public boolean test(int value) {
-                return !toExclude.contains(value);
-            }
-        }).toArray();
+        int[] newSet = Arrays.stream(set).filter(e -> !toExclude.contains(e)).toArray();
 
         // Shuffle the set:
         MathArrays.shuffle(newSet, randomGenerator);

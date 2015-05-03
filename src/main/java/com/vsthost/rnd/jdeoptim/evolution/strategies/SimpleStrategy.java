@@ -75,7 +75,7 @@ public class SimpleStrategy implements Strategy {
 
             // Get 2 random member indices from the population which are distinct:
             int[] randomMembers = Utils.pickRandom(
-                    Utils.toPrimitive(Utils.sequence(population.getSize())),
+                    Utils.sequence(population.getSize()),
                     2,
                     new int[]{c},
                     this.randomGenerator);
