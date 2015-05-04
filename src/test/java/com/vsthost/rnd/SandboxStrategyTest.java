@@ -21,7 +21,7 @@ import com.vsthost.rnd.jdeoptim.diagnostics.Diagnostics;
 import com.vsthost.rnd.jdeoptim.evolution.Objective;
 import com.vsthost.rnd.jdeoptim.evolution.Population;
 import com.vsthost.rnd.jdeoptim.evolution.Problem;
-import com.vsthost.rnd.jdeoptim.evolution.strategies.SimpleStrategy;
+import com.vsthost.rnd.jdeoptim.evolution.strategies.SandboxStrategy;
 import com.vsthost.rnd.jdeoptim.evolution.strategies.Strategy;
 import org.apache.commons.math3.distribution.UniformRealDistribution;
 import org.apache.commons.math3.random.MersenneTwister;
@@ -32,41 +32,19 @@ import static org.junit.Assert.assertTrue;
 /**
  * Unit test for simple App.
  */
-public class StructuralTest {
+public class SandboxStrategyTest {
 
     /**
      * Defines a silly formula to be used in the objectives.
      *
      * @param x X
      * @param y Y
-     * @return x^2 * 2xy * y^2
+     * @return Some silly result.
      */
     public static double SillyFormula (double x, double y) {
-        return x * x + 2 * x * y + y * y;
-    }
-
-    @Test
-    public void isItRunningAtAll() {
-        // Create an instance of a problem:
-        Problem problem = new Problem(new double[] {-1, -1}, new double[]{1, 1});
-
-        // Define an objective:
-        Objective objective = candidate -> Math.abs(SillyFormula(candidate[0], candidate[1]));
-
-        // Define an empty strategy:
-        Strategy strategy = (population, problem1, objective1) -> {};
-
-        // Initialize a population:
-        Population population = new Population(100, 2, new double[] {-1, -1}, new double[]{1, 1}, new UniformRealDistribution());
-
-        // Define the diagnostics:
-        Diagnostics diagnostics = new Diagnostics(true, true);
-
-        // Define the DE instance:
-        DEoptim DEoptim = new DEoptim(10, problem, objective, strategy, population, diagnostics);
-
-        // Run it:
-        DEoptim.evolve();
+        final double z = Math.sqrt(x * y == 0 ? 1 : Math.abs(x * y));
+        final double t = Math.pow(x <= 0 ? 1 : x, y);
+        return x * x * x * + 3 * x * x + 2 * x * y + 3 *  y * y + y * y * y + 5 * x * y + z + t;
     }
 
     @Test
@@ -78,16 +56,16 @@ public class StructuralTest {
         Objective objective = candidate -> Math.abs(SillyFormula(candidate[0], candidate[1]));
 
         // Define a strategy:
-        Strategy strategy = new SimpleStrategy(0.75, 0.8, new MersenneTwister());
+        Strategy strategy = new SandboxStrategy(0.75, 0.8, 0.1, new MersenneTwister());
 
         // Initialize a population:
-        Population population = new Population(100, 2, new double[] {-1, -1}, new double[]{1, 1}, new UniformRealDistribution());
+        Population population = new Population(200, 2, new double[] {-1, -1}, new double[]{1, 1}, new UniformRealDistribution());
 
         // Define the diagnostics:
         Diagnostics diagnostics = new Diagnostics(true, true);
 
         // Define the DE instance:
-        DEoptim DEoptim = new DEoptim(10, problem, objective, strategy, population, diagnostics);
+        DEoptim DEoptim = new DEoptim(50, problem, objective, strategy, population, diagnostics);
 
         // Run it:
         DEoptim.evolve();
