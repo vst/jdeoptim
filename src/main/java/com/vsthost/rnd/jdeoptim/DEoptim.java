@@ -126,4 +126,58 @@ public class DEoptim {
         // Done, let the diagnostics know that we are finished with the evolution:
         this.diagnostics.evolutionFinished(this.population);
     }
+
+    /**
+     * Returns the number of iterations.
+     *
+     * @return The number of iterations.
+     */
+    public int getIterations() {
+        return iterations;
+    }
+
+    /**
+     * Returns the problem specification.
+     *
+     * @return The problem specification.
+     */
+    public Problem getProblem() {
+        return problem;
+    }
+
+    /**
+     * Returns the objective.
+     *
+     * @return The objective.
+     */
+    public Objective getObjective() {
+        return objective;
+    }
+
+    /**
+     * Returns the strategy.
+     *
+     * @return The strategy.
+     */
+    public Strategy getStrategy() {
+        return strategy;
+    }
+
+    /**
+     * Returns the last available population.
+     *
+     * @return The last available population.
+     */
+    public Population getPopulation() {
+        return population;
+    }
+
+    /**
+     * Returns the diagnostics.
+     *
+     * @return The diagnostics.
+     */
+    public Diagnostics getDiagnostics() {
+        return diagnostics;
+    }
 }
