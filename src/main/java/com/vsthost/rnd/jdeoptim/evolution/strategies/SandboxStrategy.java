@@ -126,13 +126,7 @@ public class SandboxStrategy implements Strategy {
                     // Check and reset F if required:
                     this.f = this.f > 1 ? 1 : this.f;
                 } while (this.f <= 0);
-//            System.err.print(this.meanF);
-//            System.err.print(" ");
-//            System.err.print(this.cr);
-//            System.err.print(" ");
-//            System.err.println(this.f);
             }
-
 
             // Get the candidate as the base of the next candidate (a.k.a. trial):
             final double[] trial = population.getMemberCopy(c);
