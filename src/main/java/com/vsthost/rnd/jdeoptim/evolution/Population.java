@@ -52,7 +52,7 @@ public class Population {
     /**
      * Defines the best member and score index.
      */
-    final private int best = 0;
+    private int best = 0;
 
     /**
      * Instantiates a population with the data consumed.
@@ -158,12 +158,14 @@ public class Population {
         // Get the best score so far:
         final double bestScore = this.scores[this.best];
 
+        // Save the score:
+        this.scores[index] = score;
+
         // Check if the new score is better than the current one:
         if (score < bestScore) {
             // Yes, save the index:
-
+            this.best = index;
         }
-        this.scores[index] = score;
     }
 
     /**
