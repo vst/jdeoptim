@@ -108,31 +108,32 @@ public class SandboxStrategy implements Strategy {
         // Get the best member of the population:
         final double[] bestMember = population.getBestMember();
 
-        // Are we going to adjust CR and F?
-        if (this.c > 0) {
-            // Yes. We will not adjust the CR first:
-            this.cr = new NormalDistribution(this.randomGenerator, this.meanCR, 0.1).sample();
+        // Iterate over the current population:
+        for (int c = 0; c < population.getSize(); c++) {
+            // Are we going to adjust CR and F?
+            if (this.c > 0) {
+                // Yes. We will not adjust the CR first:
+                this.cr = new NormalDistribution(this.randomGenerator, this.meanCR, 0.1).sample();
 
-            // Check and reset CR:
-            this.cr = this.cr > 1 ? 1 : (this.cr < 0 ? 0 : this.cr);
+                // Check and reset CR:
+                this.cr = this.cr > 1 ? 1 : (this.cr < 0 ? 0 : this.cr);
 
-            // OK, now we will adjust F:
-            do {
-                // Get the new F:
-                this.f = new CauchyDistribution(this.randomGenerator, this.meanF, 0.1).sample();
+                // OK, now we will adjust F:
+                do {
+                    // Get the new F:
+                    this.f = new CauchyDistribution(this.randomGenerator, this.meanF, 0.1).sample();
 
-                // Check and reset F if required:
-                this.f = this.f > 1 ? 1 : this.f;
-            } while (this.f <= 0);
+                    // Check and reset F if required:
+                    this.f = this.f > 1 ? 1 : this.f;
+                } while (this.f <= 0);
 //            System.err.print(this.meanF);
 //            System.err.print(" ");
 //            System.err.print(this.cr);
 //            System.err.print(" ");
 //            System.err.println(this.f);
-        }
+            }
 
-        // Iterate over the current population:
-        for (int c = 0; c < population.getSize(); c++) {
+
             // Get the candidate as the base of the next candidate (a.k.a. trial):
             final double[] trial = population.getMemberCopy(c);
 
@@ -183,12 +184,11 @@ public class SandboxStrategy implements Strategy {
                 this.goodF2 += Math.pow(this.f, 2);
             }
 
-        }
-
-        // Re-compute mean CR and F if required:
-        if (this.c > 0 && this.goodF != 0) {
-            this.meanCR = (1 - this.c) * this.meanCR + this.c * this.goodCR;
-            this.meanF = (1 - this.c) * this.meanF + this.c * this.goodF2 / this.goodF;
+            // Re-compute mean CR and F if required:
+            if (this.c > 0 && this.goodF != 0) {
+                this.meanCR = (1 - this.c) * this.meanCR + this.c * this.goodCR;
+                this.meanF = (1 - this.c) * this.meanF + this.c * this.goodF2 / this.goodF;
+            }
         }
     }
 }
