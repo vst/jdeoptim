@@ -81,18 +81,18 @@ public class StructuralTest {
         Strategy strategy = new SimpleStrategy(0.75, 0.8, new MersenneTwister());
 
         // Initialize a population:
-        Population population = new Population(100, 2, new double[] {-1, -1}, new double[]{1, 1}, new UniformRealDistribution());
+        Population population = new Population(10, 2, new double[] {-1, -1}, new double[]{1, 1}, new UniformRealDistribution());
 
         // Define the diagnostics:
         Diagnostics diagnostics = new Diagnostics(true, true);
 
         // Define the DE instance:
-        DEoptim DEoptim = new DEoptim(10, problem, objective, strategy, population, diagnostics);
+        DEoptim DEoptim = new DEoptim(50, problem, objective, strategy, population, diagnostics);
 
         // Run it:
         DEoptim.evolve();
 
         // Compare the first score to the best:
-        assertTrue(diagnostics.getEntries().get(0).score > diagnostics.getBestScore());
+        assertTrue(diagnostics.getEntries().get(0).score >= diagnostics.getBestScore());
     }
 }
