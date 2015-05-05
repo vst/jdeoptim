@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Vehbi Sinan Tunalioglu <vst@vsthost.com>.
+ * Copyright 2015 Vehbi Sinan Tunalioglu <vst@vsthost.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package com.vsthost.rnd.jdeoptim;
 
+import com.vsthost.rnd.jdeoptim.evolution.Objective;
 import org.apache.commons.math3.distribution.UniformIntegerDistribution;
 import org.apache.commons.math3.distribution.UniformRealDistribution;
 import org.apache.commons.math3.random.MersenneTwister;
@@ -32,7 +33,7 @@ public class DE {
     /**
      * Defines the objective function to be used.
      */
-    private ObjectiveFunction function;
+    private Objective function;
 
     /**
      * Defines the dimension of the problem.
@@ -126,7 +127,7 @@ public class DE {
      * @param weight The weight for deviations
      * @param logging Flag indivating if we are logging or not
      */
-    public DE(ObjectiveFunction function, double[] lowerLimit, double[] upperLimit, int iterations, int populationSize, double crossoverProbability, double weight, boolean logging) {
+    public DE(Objective function, double[] lowerLimit, double[] upperLimit, int iterations, int populationSize, double crossoverProbability, double weight, boolean logging) {
         // Set the function:
         this.function = function;
 
@@ -180,7 +181,7 @@ public class DE {
      * @param weight The weight for deviations
      * @param logging Flag indivating if we are logging or not
      */
-    public DE(ObjectiveFunction function, double[] lowerLimit, double[] upperLimit, int iterations, double[][] initialPopulation, double crossoverProbability, double weight, boolean logging) {
+    public DE(Objective function, double[] lowerLimit, double[] upperLimit, int iterations, double[][] initialPopulation, double crossoverProbability, double weight, boolean logging) {
         // Set the function:
         this.function = function;
 

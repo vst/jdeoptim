@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Vehbi Sinan Tunalioglu <vst@vsthost.com>.
+ * Copyright 2015 Vehbi Sinan Tunalioglu <vst@vsthost.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package com.vsthost.rnd.jdeoptim;
+package com.vsthost.rnd.jdeoptim.evolution;
 
 /**
  * Defines an interface which all DE objective functions should implement.
- *
- * @author Vehbi Sinan Tunalioglu
  */
-public interface ObjectiveFunction {
+public interface Objective {
     /**
      * Evaluates the candidate and returns the candidate score.
      *
