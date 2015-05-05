@@ -108,6 +108,11 @@ public class SandboxStrategy implements Strategy {
         // Get the best member of the population:
         final double[] bestMember = population.getBestMember();
 
+        // Define the new population data and scores as we don't want to override old one within the loop:
+        final double[][] newPopData = new double[population.getSize()][];
+        final double[] newPopScores = new double[population.getSize()];
+        final boolean[] newPopFlags = new boolean[population.getSize()];
+
         // Iterate over the current population:
         for (int c = 0; c < population.getSize(); c++) {
             // Are we going to adjust CR and F?
@@ -170,18 +175,31 @@ public class SandboxStrategy implements Strategy {
             // Check the new score against the old one and act accordingly:
             if (newScore < oldScore) {
                 // Yes, our trial is a better candidate. Replace:
-                population.setMember(c, trial, newScore);
+                newPopData[c] = trial;
+                newPopScores[c] = newScore;
+                newPopFlags[c] = true;
 
                 // We will now re-adjust for CR and F.
                 this.goodCR += this.cr / ++this.goodNPCount;
                 this.goodF += this.f;
                 this.goodF2 += Math.pow(this.f, 2);
             }
+            else {
+                newPopFlags[c] = false;
+            }
+
 
             // Re-compute mean CR and F if required:
             if (this.c > 0 && this.goodF != 0) {
                 this.meanCR = (1 - this.c) * this.meanCR + this.c * this.goodCR;
                 this.meanF = (1 - this.c) * this.meanF + this.c * this.goodF2 / this.goodF;
+            }
+        }
+
+        // Now, override the population:
+        for (int i = 0; i < population.getSize(); i++) {
+            if (newPopFlags[i]) {
+                population.setMember(i, newPopData[i], newPopScores[i]);
             }
         }
     }
