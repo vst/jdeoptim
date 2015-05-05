@@ -43,9 +43,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git@github.com:vehbisinan/jdeoptim.git</connection>
-        <developerConnection>scm:git:git@github.com:vehbisinan/jdeoptim.git</developerConnection>
-        <url>git@github.com:vehbisinan/jdeoptim.git</url>
+        <connection>scm:git:git@github.com:vst/jdeoptim.git</connection>
+        <developerConnection>scm:git:git@github.com:vst/jdeoptim.git</developerConnection>
+        <url>git@github.com:vst/jdeoptim.git</url>
     </scm>
 
     <properties>
