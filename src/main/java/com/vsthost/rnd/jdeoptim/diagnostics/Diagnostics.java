@@ -182,6 +182,24 @@ public class Diagnostics {
     }
 
     /**
+     * Indicates if logging is enabled.
+     *
+     * @return True if logging is enabled, false otherwise.
+     */
+    public boolean isLogging() {
+        return logging;
+    }
+
+    /**
+     * Indicates if population score statistics is enabled.
+     *
+     * @return True if population score statistics is enabled, false otherwise.
+     */
+    public boolean isStatistics() {
+        return statistics;
+    }
+
+    /**
      * Indicates if the evolution has started.
      *
      * @return True if the evolution has started, false otherwise.
