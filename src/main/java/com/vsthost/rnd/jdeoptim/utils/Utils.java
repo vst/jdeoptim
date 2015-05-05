@@ -145,8 +145,8 @@ public class Utils {
      */
     public static int[] pickRandom(int[] set, int n, int[] exclude, RandomGenerator randomGenerator) {
         // Create a set from excluded:
-        final Set<Integer> toExclude = new HashSet();
-        Arrays.stream(exclude).forEach(value -> toExclude.add(value));
+        final Set<Integer> toExclude = new HashSet<>();
+        Arrays.stream(exclude).forEach(toExclude::add);
 
         // Create set out of elements:
         int[] newSet = Arrays.stream(set).filter(e -> !toExclude.contains(e)).toArray();

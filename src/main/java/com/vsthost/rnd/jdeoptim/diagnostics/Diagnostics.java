@@ -46,7 +46,7 @@ public class Diagnostics {
     /**
      * Initializes an evolution book for keeping records.
      */
-    final private List<Diagnostics.Entry> entries = new ArrayList();
+    final private List<Diagnostics.Entry> entries = new ArrayList<>();
 
     /**
      * Defines a list of observers.
