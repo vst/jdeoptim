@@ -1,5 +1,14 @@
-VERS: 2015-05-05 ------- release/0.0.3
+VERS: 2015-08-09 ------- release/0.0.4
 
+    * 2015-08-09 a8c5388 [release] Version bumped to 0.0.4 (vst@vsthost.com)
+    * 2015-08-09 35a521c [feature] Implemented Strategy 3 in a similar way to R's DEoptim library (vst@vsthost.com)
+    * 2015-07-09 9e93901 Deprecated DE class (vst@vsthost.com)
+    * 2015-05-05 eae47d6 Corrected SCM configuration in the POM file (vst@vsthost.com)
+    * 2015-05-05 ef47e28 Development version bumped to 0.0.4-SNAPSHOT (vst@vsthost.com)
+
+VERS: 2015-05-05 c2bf233 release/0.0.3 (vst@vsthost.com)
+
+    * 2015-05-05 0f1b31f Added and updated changelog (vst@vsthost.com)
     * 2015-05-05 16e6f66 Version bumped to 0.0.3 (vst@vsthost.com)
     * 2015-05-05 1befd56 Replaced the install script with Makefile (vst@vsthost.com)
     * 2015-05-05 dd203eb Code makeup, satisfying lint (vst@vsthost.com)
