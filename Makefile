@@ -14,4 +14,4 @@ install:
 	mvn install -Dgpg.skip=true
 
 deploy:
-	mvn deploy
+	mvn clean compile test package deploy

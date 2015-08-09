@@ -28,3 +28,4 @@ hs_err_pid*
 # Ignore other editor files
 /*.iml
 /.idea/
+tmp

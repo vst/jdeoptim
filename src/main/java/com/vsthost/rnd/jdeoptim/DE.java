@@ -29,6 +29,7 @@ import java.util.Arrays;
  *
  * @author Vehbi Sinan Tunalioglu
  */
+@Deprecated
 public class DE {
     /**
      * Defines the objective function to be used.
