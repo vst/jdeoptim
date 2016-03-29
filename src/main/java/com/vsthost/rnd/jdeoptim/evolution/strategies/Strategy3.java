@@ -16,6 +16,7 @@
 
 package com.vsthost.rnd.jdeoptim.evolution.strategies;
 
+import com.vsthost.rnd.commons.math.ext.linear.DMatrixUtils;
 import com.vsthost.rnd.jdeoptim.evolution.Objective;
 import com.vsthost.rnd.jdeoptim.evolution.Population;
 import com.vsthost.rnd.jdeoptim.evolution.Problem;
@@ -96,6 +97,11 @@ public class Strategy3 implements Strategy {
     private double goodF2;
 
     /**
+     * Defines the precision.
+     */
+    private double precision;
+
+    /**
      * Implements the Strategy 3.
      *
      * @param cr Crossover probability
@@ -105,7 +111,7 @@ public class Strategy3 implements Strategy {
      * @param bounceBack Indicates if we are bouncing back or setting to limits in case of violations.
      * @param randomGenerator The random generator.
      */
-    public Strategy3(double cr, double f, double c, double jitterFactor, boolean bounceBack, RandomGenerator randomGenerator) {
+    public Strategy3(double cr, double f, double c, double jitterFactor, boolean bounceBack, double precision, RandomGenerator randomGenerator) {
         // Save the random number generator:
         this.randomGenerator = randomGenerator;
 
@@ -125,6 +131,9 @@ public class Strategy3 implements Strategy {
 
         // Set the meanF initially to the crossover:
         this.meanF = this.f;
+
+        // Save precision:
+        this.precision = precision;
 
         // Setup the distribution for random sampling of members:
         this.probability = new UniformRealDistribution(randomGenerator, 0, 1);
@@ -200,6 +209,17 @@ public class Strategy3 implements Strategy {
                 k++;
             } while (probability.sample() < this.cr && k < population.getDimension());
 
+            // We have an interim trial. We will now truncate:
+            for (int i = 0; i < trial.length; i++) {
+                // Are we truncating?
+                if (precision == 0) {
+                    continue;
+                }
+
+                // OK, truncate:
+                trial[i] = DMatrixUtils.roundDoubleToClosest(trial[i], this.precision);
+            }
+
             // Apply limits in case that we have violated:
             for (int i = 0; i < trial.length; i++) {
                 // Check lower limit:
@@ -223,7 +243,7 @@ public class Strategy3 implements Strategy {
                 }
             }
 
-            // OK, we are done with the trial. We will now check if we have a
+            // We will now check if we have a
             // better candidate. If yes, we will replace the old member with the trial,
             // if not we will just skip. Compute the score:
             final double newScore = objective.apply(trial);
