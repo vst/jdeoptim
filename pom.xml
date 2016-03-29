@@ -19,7 +19,7 @@
 
     <groupId>com.vsthost.rnd</groupId>
     <artifactId>jdeoptim</artifactId>
-    <version>0.0.4</version>
+    <version>0.0.5</version>
     <packaging>jar</packaging>
 
     <name>jdeoptim</name>
@@ -64,6 +64,7 @@
 
         <!-- Define dependency versions -->
         <version.commons-math3>3.4.1</version.commons-math3>
+        <version.commons-math-extensions>0.0.7</version.commons-math-extensions>
         <version.junit>4.12</version.junit>
     </properties>
 
@@ -73,6 +74,13 @@
             <artifactId>commons-math3</artifactId>
             <version>${version.commons-math3}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.vsthost.rnd</groupId>
+            <artifactId>commons-math-extensions</artifactId>
+            <version>${version.commons-math-extensions}</version>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
