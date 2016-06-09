@@ -112,7 +112,7 @@ public class DEoptim {
         }
 
         // OK, fun starts. We will iterate, evolve and update observers:
-        for (int iteration = 0; iteration < this.iterations; iteration++) {
+        for (int iteration = 0; iteration < this.iterations && this.population.getBestScore() > Double.NEGATIVE_INFINITY; iteration++) {
             // Tell diagnostics that we are starting a new iteration:
             this.diagnostics.iterationStarted(iteration);
 
