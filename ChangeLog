@@ -1,5 +1,12 @@
-VERS: 2016-03-29 ------- release/0.0.5
+VERS: 2016-06-09 ------- release/0.0.6
 
+    * 2016-06-09 f5b13b3 [release] Version bumped to 0.0.6 (vst@vsthost.com)
+    * 2016-06-09 6070a20 [feature] Stopping the evolution when population best score is -Inf (vst@vsthost.com)
+    * 2016-03-29 65cdaf7 [chore] Development version bumped to 0.0.6-SNAPSHOT (vst@vsthost.com)
+
+VERS: 2016-03-29 a75d93e release/0.0.5 (vst@vsthost.com)
+
+    * 2016-03-29 4a0d90c [release] Change log updated (vst@vsthost.com)
     * 2016-03-29 22f2fc9 [release] Version bumped to 0.0.5 (vst@vsthost.com)
     * 2016-03-29 d547225 [feature] Implemented truncating trials for a given precision factor (vst@vsthost.com)
     * 2015-08-09 53919c2 [chore] Development version bumped to 0.0.5-SNAPSHOT (vst@vsthost.com)
