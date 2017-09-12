@@ -83,6 +83,11 @@ public class SandboxStrategy implements Strategy {
      * Defines the rate of marginal part of F adoption.
      */
     private double goodF2;
+    
+    /**
+     * Reuse array to reduce effort on garbage collector
+     */
+    final private int[] randomMembers = new int[2];
 
     public SandboxStrategy(double cr, double f, double c, RandomGenerator randomGenerator) {
         // Save the random number generator:
@@ -140,7 +145,7 @@ public class SandboxStrategy implements Strategy {
             final double oldScore = population.getScore(c);
 
             // Get 2 random member indices from the population which are distinct:
-            int[] randomMembers = Utils.pickRandom(Utils.sequence(population.getSize()), 2, new int[]{c}, this.randomGenerator);
+            Utils.fastPickTwoRandomMembers(randomMembers, population.getSize(), c, randomGenerator);
 
             // Get the random members:
             final double[] randomMember1 = population.getMember(randomMembers[0]);
@@ -151,19 +156,9 @@ public class SandboxStrategy implements Strategy {
                 // Any manipulation?
                 if (probability.sample() < this.cr) {
                     // Yes, we will proceed with a change:
-                    trial[i] = bestMember[i] + this.f * (probability.sample() + 0.0001) * (randomMember1[i] - randomMember2[i]);
-                }
-            }
-
-            // Apply limits in case that we have violated:
-            for (int i = 0; i < trial.length; i++) {
-                // Check lower limit:
-                if (trial[i] < problem.getLower()[i]) {
-                    trial[i] = problem.getLower()[i];
-                }
-                // Check upper limit:
-                else if (trial[i] > problem.getUpper()[i]) {
-                    trial[i] = problem.getUpper()[i];
+                    double newValue = bestMember[i] + this.f * (probability.sample() + 0.0001) * (randomMember1[i] - randomMember2[i]);
+                    // Apply limits in case that we have violated:
+					trial[i] = Utils.applyLimits(problem, i, newValue);
                 }
             }
 

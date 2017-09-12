@@ -46,6 +46,11 @@ public class SimpleStrategy implements Strategy {
      * Defines the weighting factor of differentials.
      */
     final private double f;
+    
+    /**
+     * Reuse array to reduce effort on garbage collector
+     */
+    final private int[] randomMembers = new int[2];
 
 
     public SimpleStrategy(double cr, double f, RandomGenerator randomGenerator) {
@@ -61,48 +66,35 @@ public class SimpleStrategy implements Strategy {
     }
 
     @Override
-    public void regenerate(Population population, Problem problem, Objective objective) {
+    public void regenerate(final Population population, final Problem problem, final Objective objective) {
         // Get the best member of the population:
         final double[] bestMember = population.getBestMember();
 
         // Iterate over the current population:
         for (int c = 0; c < population.getSize(); c++) {
             // Get the candidate as the base of the next candidate (a.k.a. trial):
+
             final double[] trial = population.getMemberCopy(c);
 
             // Get the score of the candidate:
             final double oldScore = population.getScore(c);
 
             // Get 2 random member indices from the population which are distinct:
-            int[] randomMembers = Utils.pickRandom(
-                    Utils.sequence(population.getSize()),
-                    2,
-                    new int[]{c},
-                    this.randomGenerator);
+            Utils.fastPickTwoRandomMembers(randomMembers, population.getSize(), c, randomGenerator);
 
             // Get the random members:
             final double[] randomMember1 = population.getMember(randomMembers[0]);
             final double[] randomMember2 = population.getMember(randomMembers[1]);
-
 
             // Iterate over all member elements and do the trick:
             for (int i = 0; i < population.getDimension(); i++) {
                 // Any manipulation?
                 if (probability.sample() < this.cr) {
                     // Yes, we will proceed with a change:
-                    trial[i] = bestMember[i] + this.f * (probability.sample() + 0.0001) * (randomMember1[i] - randomMember2[i]);
-                }
-            }
-
-            // Apply limits in case that we have violated:
-            for (int i = 0; i < trial.length; i++) {
-                // Check lower limit:
-                if (trial[i] < problem.getLower()[i]) {
-                    trial[i] = problem.getLower()[i];
-                }
-                // Check upper limit:
-                else if (trial[i] > problem.getUpper()[i]) {
-                    trial[i] = problem.getUpper()[i];
+                    final double newValue = bestMember[i]
+                            + this.f * (probability.sample() + 0.0001) * (randomMember1[i] - randomMember2[i]);
+                    // Apply limits in case that we have violated:
+                    trial[i] = Utils.applyLimits(problem, i, newValue);
                 }
             }
 
@@ -118,4 +110,6 @@ public class SimpleStrategy implements Strategy {
             }
         }
     }
+
+    
 }
