@@ -114,7 +114,7 @@ public class ParallelSimpleStrategy implements Strategy {
 			trials[c] = trial;
 		}
 
-		final Future<Double>[] futures = submitTrials(trials, objective);
+		final double[] newScores = submitTrials(trials, objective);
 
 		// OK, we are done with the trial. We will now check if we
 		// have a
@@ -122,17 +122,14 @@ public class ParallelSimpleStrategy implements Strategy {
 		// with the trial,
 		// if not we will just skip. Compute the score:
 		for (int c = 0; c < trials.length; c++) {
-			double[] trial = trials[c];
-			Future<Double> future = futures[c];
-
 			// Get the score of the candidate:
 			final double oldScore = population.getScore(c);
-
-			double newScore = getFuture(future);
+			final double newScore = newScores[c];
 
 			// Check the new score against the old one and act accordingly:
 			if (newScore < oldScore) {
 				// Yes, our trial is a better candidate. Replace:
+				double[] trial = trials[c];
 				population.setMember(c, trial, newScore);
 			}
 		}
@@ -141,7 +138,7 @@ public class ParallelSimpleStrategy implements Strategy {
 	/**
 	 * Can be overridden to maybe chunk tasks manually.
 	 */
-	protected Future<Double>[] submitTrials(double[][] trials, final Objective objective) {
+	protected double[] submitTrials(double[][] trials, final Objective objective) {
 		@SuppressWarnings("unchecked")
 		final Future<Double>[] futures = new Future[trials.length];
 		for (int c = 0; c < trials.length; c++) {
@@ -149,13 +146,18 @@ public class ParallelSimpleStrategy implements Strategy {
 			futures[c] = executor.submit(new Callable<Double>() {
 				@Override
 				public Double call() throws Exception {
-
 					final double newScore = objective.apply(trial);
 					return newScore;
 				}
 			});
 		}
-		return futures;
+		double[] newScores = new double[futures.length];
+		for (int c = 0; c < futures.length; c++) {
+			Future<Double> future = futures[c];
+			double newScore = getFuture(future);
+			newScores[c] = newScore;
+		}
+		return newScores;
 	}
 
 	protected double getFuture(Future<Double> future) {
