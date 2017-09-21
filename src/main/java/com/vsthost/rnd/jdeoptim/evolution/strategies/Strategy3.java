@@ -17,6 +17,7 @@
 package com.vsthost.rnd.jdeoptim.evolution.strategies;
 
 import com.vsthost.rnd.commons.math.ext.linear.DMatrixUtils;
+import com.vsthost.rnd.jdeoptim.DEoptim;
 import com.vsthost.rnd.jdeoptim.evolution.Objective;
 import com.vsthost.rnd.jdeoptim.evolution.Population;
 import com.vsthost.rnd.jdeoptim.evolution.Problem;
@@ -240,7 +241,7 @@ public class Strategy3 implements Strategy {
 				k++;
 			} while (probability.sample() < this.cr && k < population.getDimension());
 
-			if (changed) {
+			if (changed || oldScore == DEoptim.INVALID_SCORE) {
 				// We will now check if we have a
 				// better candidate. If yes, we will replace the old member with
 				// the

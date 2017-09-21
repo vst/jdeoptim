@@ -23,6 +23,7 @@ import java.util.concurrent.Future;
 import org.apache.commons.math3.distribution.UniformRealDistribution;
 import org.apache.commons.math3.random.RandomGenerator;
 
+import com.vsthost.rnd.jdeoptim.DEoptim;
 import com.vsthost.rnd.jdeoptim.evolution.Objective;
 import com.vsthost.rnd.jdeoptim.evolution.Population;
 import com.vsthost.rnd.jdeoptim.evolution.Problem;
@@ -117,7 +118,7 @@ public class ParallelSimpleStrategy implements Strategy {
 				}
 			}
 
-			if (changed) {
+			if (changed || population.getScore(c) == DEoptim.INVALID_SCORE) {
 				trials.add(trial);
 				trialIndexes.add(c);
 			}

@@ -16,6 +16,7 @@
 
 package com.vsthost.rnd.jdeoptim.evolution.strategies;
 
+import com.vsthost.rnd.jdeoptim.DEoptim;
 import com.vsthost.rnd.jdeoptim.evolution.Objective;
 import com.vsthost.rnd.jdeoptim.evolution.Population;
 import com.vsthost.rnd.jdeoptim.evolution.Problem;
@@ -174,7 +175,7 @@ public class SandboxStrategy implements Strategy {
 			// better candidate. If yes, we will replace the old member with the
 			// trial,
 			// if not we will just skip. Compute the score:
-			if (changed) {
+			if (changed || oldScore == DEoptim.INVALID_SCORE) {
 				final double newScore = objective.apply(trial);
 
 				// Check the new score against the old one and act accordingly:

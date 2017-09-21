@@ -27,6 +27,8 @@ import com.vsthost.rnd.jdeoptim.stop.StopIteration;
  * Provides a differential evolution runner class.
  */
 public class DEoptim {
+	public static final double INVALID_SCORE = Double.POSITIVE_INFINITY;
+
 	/**
 	 * Defines the number of iterations.
 	 */
@@ -178,7 +180,7 @@ public class DEoptim {
 				// Oops, the member is not valid. Set the score to worst
 				// possible. The evolution
 				// is going to take care of it afterwards:
-				this.population.setScore(i, Double.POSITIVE_INFINITY);
+				this.population.setScore(i, INVALID_SCORE);
 			} else {
 				// Good to go! Calculate and set the score:
 				this.population.setScore(i, this.objective.apply(member));
