@@ -29,173 +29,184 @@ import org.apache.commons.math3.random.RandomGenerator;
  * Defines a simple strategy.
  */
 public class SandboxStrategy implements Strategy {
-    /**
-     * Defines a uniform, real probability distribution.
-     */
-    final private UniformRealDistribution probability;
+	/**
+	 * Defines a uniform, real probability distribution.
+	 */
+	final private UniformRealDistribution probability;
 
-    /**
-     * Defines the random number generator for the strategy.
-     */
-    final private RandomGenerator randomGenerator;
+	/**
+	 * Defines the random number generator for the strategy.
+	 */
+	final private RandomGenerator randomGenerator;
 
-    /**
-     * Defines the crossover probability.
-     */
-    private double cr;
+	/**
+	 * Defines the crossover probability.
+	 */
+	private double cr;
 
-    /**
-     * Defines the weighting factor of differentials.
-     */
-    private double f;
+	/**
+	 * Defines the weighting factor of differentials.
+	 */
+	private double f;
 
-    /**
-     * Defines the weighting factor of differentials.
-     */
-    final private double c;
+	/**
+	 * Defines the weighting factor of differentials.
+	 */
+	final private double c;
 
-    /**
-     * Defines the mean crossover probability for the case of <code>c &gt; 0</code>.
-     */
-    private double meanCR;
+	/**
+	 * Defines the mean crossover probability for the case of
+	 * <code>c &gt; 0</code>.
+	 */
+	private double meanCR;
 
-    /**
-     * Defines the mean weighting factor for the case of <code>c &gt; 0</code>;
-     */
-    private double meanF;
+	/**
+	 * Defines the mean weighting factor for the case of <code>c &gt; 0</code>;
+	 */
+	private double meanF;
 
-    /**
-     * Defines the number of successful trials.
-     */
-    private int goodNPCount;
+	/**
+	 * Defines the number of successful trials.
+	 */
+	private int goodNPCount;
 
-    /**
-     * Defines the marginal part of CR adoption.
-     */
-    private double goodCR;
+	/**
+	 * Defines the marginal part of CR adoption.
+	 */
+	private double goodCR;
 
-    /**
-     * Defines the marginal part of F adoption.
-     */
-    private double goodF;
+	/**
+	 * Defines the marginal part of F adoption.
+	 */
+	private double goodF;
 
-    /**
-     * Defines the rate of marginal part of F adoption.
-     */
-    private double goodF2;
-    
-    /**
-     * Reuse array to reduce effort on garbage collector
-     */
-    final private int[] randomMembers = new int[2];
+	/**
+	 * Defines the rate of marginal part of F adoption.
+	 */
+	private double goodF2;
 
-    public SandboxStrategy(double cr, double f, double c, RandomGenerator randomGenerator) {
-        // Save the random number generator:
-        this.randomGenerator = randomGenerator;
+	/**
+	 * Reuse array to reduce effort on garbage collector
+	 */
+	final private int[] randomMembers = new int[2];
 
-        // Save the CR, F and c parameters:
-        this.cr = cr;
-        this.f = f;
-        this.c = c;
+	public SandboxStrategy(double cr, double f, double c, RandomGenerator randomGenerator) {
+		// Save the random number generator:
+		this.randomGenerator = randomGenerator;
 
-        // Set the meanCR initially to the crossover:
-        this.meanCR = this.cr;
+		// Save the CR, F and c parameters:
+		this.cr = cr;
+		this.f = f;
+		this.c = c;
 
-        // Set the meanF initially to the crossover:
-        this.meanF = this.f;
+		// Set the meanCR initially to the crossover:
+		this.meanCR = this.cr;
 
-        // Setup the distribution for random sampling of members:
-        this.probability = new UniformRealDistribution(randomGenerator, 0, 1);
-    }
+		// Set the meanF initially to the crossover:
+		this.meanF = this.f;
 
-    @Override
-    public void regenerate(Population population, Problem problem, Objective objective) {
-        // Get the best member of the population:
-        final double[] bestMember = population.getBestMember();
+		// Setup the distribution for random sampling of members:
+		this.probability = new UniformRealDistribution(randomGenerator, 0, 1);
+	}
 
-        // Define the new population data and scores as we don't want to override old one within the loop:
-        final double[][] newPopData = new double[population.getSize()][];
-        final double[] newPopScores = new double[population.getSize()];
-        final boolean[] newPopFlags = new boolean[population.getSize()];
+	@Override
+	public void regenerate(Population population, Problem problem, Objective objective) {
+		// Get the best member of the population:
+		final double[] bestMember = population.getBestMember();
 
-        // Iterate over the current population:
-        for (int c = 0; c < population.getSize(); c++) {
-            // Are we going to adjust CR and F?
-            if (this.c > 0) {
-                // Yes. We will not adjust the CR first:
-                this.cr = new NormalDistribution(this.randomGenerator, this.meanCR, 0.1).sample();
+		// Define the new population data and scores as we don't want to
+		// override old one within the loop:
+		final double[][] newPopData = new double[population.getSize()][];
+		final double[] newPopScores = new double[population.getSize()];
+		final boolean[] newPopFlags = new boolean[population.getSize()];
 
-                // Check and reset CR:
-                this.cr = this.cr > 1 ? 1 : (this.cr < 0 ? 0 : this.cr);
+		// Iterate over the current population:
+		for (int c = 0; c < population.getSize(); c++) {
+			// Are we going to adjust CR and F?
+			if (this.c > 0) {
+				// Yes. We will not adjust the CR first:
+				this.cr = new NormalDistribution(this.randomGenerator, this.meanCR, 0.1).sample();
 
-                // OK, now we will adjust F:
-                do {
-                    // Get the new F:
-                    this.f = new CauchyDistribution(this.randomGenerator, this.meanF, 0.1).sample();
+				// Check and reset CR:
+				this.cr = this.cr > 1 ? 1 : (this.cr < 0 ? 0 : this.cr);
 
-                    // Check and reset F if required:
-                    this.f = this.f > 1 ? 1 : this.f;
-                } while (this.f <= 0);
-            }
+				// OK, now we will adjust F:
+				do {
+					// Get the new F:
+					this.f = new CauchyDistribution(this.randomGenerator, this.meanF, 0.1).sample();
 
-            // Get the candidate as the base of the next candidate (a.k.a. trial):
-            final double[] trial = population.getMemberCopy(c);
+					// Check and reset F if required:
+					this.f = this.f > 1 ? 1 : this.f;
+				} while (this.f <= 0);
+			}
 
-            // Get the score of the candidate:
-            final double oldScore = population.getScore(c);
+			// Get the candidate as the base of the next candidate (a.k.a.
+			// trial):
+			final double[] trial = population.getMemberCopy(c);
 
-            // Get 2 random member indices from the population which are distinct:
-            Utils.fastPickTwoRandomMembers(randomMembers, population.getSize(), c, randomGenerator);
+			// Get the score of the candidate:
+			final double oldScore = population.getScore(c);
 
-            // Get the random members:
-            final double[] randomMember1 = population.getMember(randomMembers[0]);
-            final double[] randomMember2 = population.getMember(randomMembers[1]);
+			// Get 2 random member indices from the population which are
+			// distinct:
+			Utils.fastPickTwoRandomMembers(randomMembers, population.getSize(), c, randomGenerator);
 
-            // Iterate over all member elements and do the trick:
-            for (int i = 0; i < population.getDimension(); i++) {
-                // Any manipulation?
-                if (probability.sample() < this.cr) {
-                    // Yes, we will proceed with a change:
-                    double newValue = bestMember[i] + this.f * (probability.sample() + 0.0001) * (randomMember1[i] - randomMember2[i]);
-                    // Apply limits in case that we have violated:
-					trial[i] = Utils.applyLimits(problem, i, newValue);
-                }
-            }
+			// Get the random members:
+			final double[] randomMember1 = population.getMember(randomMembers[0]);
+			final double[] randomMember2 = population.getMember(randomMembers[1]);
 
-            // OK, we are done with the trial. We will now check if we have a
-            // better candidate. If yes, we will replace the old member with the trial,
-            // if not we will just skip. Compute the score:
-            final double newScore = objective.apply(trial);
+			// Iterate over all member elements and do the trick:
+			boolean changed = false;
+			for (int i = 0; i < population.getDimension(); i++) {
+				// Any manipulation?
+				if (probability.sample() < this.cr) {
+					// Yes, we will proceed with a change:
+					double newValue = bestMember[i]
+							+ this.f * (probability.sample() + 0.0001) * (randomMember1[i] - randomMember2[i]);
+					// Apply limits in case that we have violated:
+					newValue = Utils.applyLimits(problem, i, newValue);
+					changed = changed || newValue != trial[i];
+					trial[i] = newValue;
+				}
+			}
 
-            // Check the new score against the old one and act accordingly:
-            if (newScore < oldScore) {
-                // Yes, our trial is a better candidate. Replace:
-                newPopData[c] = trial;
-                newPopScores[c] = newScore;
-                newPopFlags[c] = true;
+			// OK, we are done with the trial. We will now check if we have a
+			// better candidate. If yes, we will replace the old member with the
+			// trial,
+			// if not we will just skip. Compute the score:
+			if (changed) {
+				final double newScore = objective.apply(trial);
 
-                // We will now re-adjust for CR and F.
-                this.goodCR += this.cr / ++this.goodNPCount;
-                this.goodF += this.f;
-                this.goodF2 += Math.pow(this.f, 2);
-            }
-            else {
-                newPopFlags[c] = false;
-            }
+				// Check the new score against the old one and act accordingly:
+				if (newScore < oldScore) {
+					// Yes, our trial is a better candidate. Replace:
+					newPopData[c] = trial;
+					newPopScores[c] = newScore;
+					newPopFlags[c] = true;
 
+					// We will now re-adjust for CR and F.
+					this.goodCR += this.cr / ++this.goodNPCount;
+					this.goodF += this.f;
+					this.goodF2 += Math.pow(this.f, 2);
+				} else {
+					newPopFlags[c] = false;
+				}
+			} else {
+				newPopFlags[c] = false;
+			}
 
-            // Re-compute mean CR and F if required:
-            if (this.c > 0 && this.goodF != 0) {
-                this.meanCR = (1 - this.c) * this.meanCR + this.c * this.goodCR;
-                this.meanF = (1 - this.c) * this.meanF + this.c * this.goodF2 / this.goodF;
-            }
-        }
+			// Re-compute mean CR and F if required:
+			if (this.c > 0 && this.goodF != 0) {
+				this.meanCR = (1 - this.c) * this.meanCR + this.c * this.goodCR;
+				this.meanF = (1 - this.c) * this.meanF + this.c * this.goodF2 / this.goodF;
+			}
+		}
 
-        // Now, override the population:
-        for (int i = 0; i < population.getSize(); i++) {
-            if (newPopFlags[i]) {
-                population.setMember(i, newPopData[i], newPopScores[i]);
-            }
-        }
-    }
+		// Now, override the population:
+		for (int i = 0; i < population.getSize(); i++) {
+			if (newPopFlags[i]) {
+				population.setMember(i, newPopData[i], newPopScores[i]);
+			}
+		}
+	}
 }

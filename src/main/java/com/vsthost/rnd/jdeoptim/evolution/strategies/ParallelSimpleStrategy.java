@@ -13,6 +13,8 @@
 
 package com.vsthost.rnd.jdeoptim.evolution.strategies;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -84,7 +86,8 @@ public class ParallelSimpleStrategy implements Strategy {
 		final double[] bestMember = population.getBestMember();
 
 		// Iterate over the current population:
-		double[][] trials = new double[population.getSize()][];
+		List<double[]> trials = new ArrayList<double[]>(population.getSize());
+		List<Integer> trialIndexes = new ArrayList<Integer>(population.getSize());
 		for (int c = 0; c < population.getSize(); c++) {
 			// Get the candidate as the base of the next candidate (a.k.a.
 			// trial):
@@ -100,37 +103,46 @@ public class ParallelSimpleStrategy implements Strategy {
 			final double[] randomMember2 = population.getMember(randomMembers[1]);
 
 			// Iterate over all member elements and do the trick:
+			boolean changed = false;
 			for (int i = 0; i < population.getDimension(); i++) {
 				// Any manipulation?
 				if (probability.sample() < this.cr) {
 					// Yes, we will proceed with a change:
-					final double newValue = bestMember[i]
+					double newValue = bestMember[i]
 							+ this.f * (probability.sample() + 0.0001) * (randomMember1[i] - randomMember2[i]);
 					// Apply limits in case that we have violated:
-					trial[i] = Utils.applyLimits(problem, i, newValue);
+					newValue = Utils.applyLimits(problem, i, newValue);
+					changed = changed || newValue != trial[i];
+					trial[i] = newValue;
 				}
 			}
 
-			trials[c] = trial;
+			if (changed) {
+				trials.add(trial);
+				trialIndexes.add(c);
+			}
 		}
 
-		final double[] newScores = submitTrials(trials, objective);
+		if (!trials.isEmpty()) {
+			final double[] newScores = submitTrials(trials, objective);
 
-		// OK, we are done with the trial. We will now check if we
-		// have a
-		// better candidate. If yes, we will replace the old member
-		// with the trial,
-		// if not we will just skip. Compute the score:
-		for (int c = 0; c < trials.length; c++) {
-			// Get the score of the candidate:
-			final double oldScore = population.getScore(c);
-			final double newScore = newScores[c];
+			// OK, we are done with the trial. We will now check if we
+			// have a
+			// better candidate. If yes, we will replace the old member
+			// with the trial,
+			// if not we will just skip. Compute the score:
+			for (int i = 0; i < trials.size(); i++) {
+				int c = trialIndexes.get(i);
+				// Get the score of the candidate:
+				final double oldScore = population.getScore(c);
+				final double newScore = newScores[i];
 
-			// Check the new score against the old one and act accordingly:
-			if (newScore < oldScore) {
-				// Yes, our trial is a better candidate. Replace:
-				double[] trial = trials[c];
-				population.setMember(c, trial, newScore);
+				// Check the new score against the old one and act accordingly:
+				if (newScore < oldScore) {
+					// Yes, our trial is a better candidate. Replace:
+					double[] trial = trials.get(i);
+					population.setMember(c, trial, newScore);
+				}
 			}
 		}
 	}
@@ -138,12 +150,12 @@ public class ParallelSimpleStrategy implements Strategy {
 	/**
 	 * Can be overridden to maybe chunk tasks manually.
 	 */
-	protected double[] submitTrials(double[][] trials, final Objective objective) {
+	protected double[] submitTrials(List<double[]> trials, final Objective objective) {
 		@SuppressWarnings("unchecked")
-		final Future<Double>[] futures = new Future[trials.length];
-		for (int c = 0; c < trials.length; c++) {
-			double[] trial = trials[c];
-			futures[c] = executor.submit(new Callable<Double>() {
+		final Future<Double>[] futures = new Future[trials.size()];
+		for (int i = 0; i < trials.size(); i++) {
+			double[] trial = trials.get(i);
+			futures[i] = executor.submit(new Callable<Double>() {
 				@Override
 				public Double call() throws Exception {
 					final double newScore = objective.apply(trial);
@@ -152,10 +164,10 @@ public class ParallelSimpleStrategy implements Strategy {
 			});
 		}
 		double[] newScores = new double[futures.length];
-		for (int c = 0; c < futures.length; c++) {
-			Future<Double> future = futures[c];
+		for (int i = 0; i < futures.length; i++) {
+			Future<Double> future = futures[i];
 			double newScore = getFuture(future);
-			newScores[c] = newScore;
+			newScores[i] = newScore;
 		}
 		return newScores;
 	}

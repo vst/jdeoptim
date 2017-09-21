@@ -205,6 +205,7 @@ public class Strategy3 implements Strategy {
 			int k = 0;
 
 			// Iterate and set elements:
+			boolean changed = false;
 			do {
 				// Get the jitter:
 				final double jitter = (probability.sample() * this.jitterFactor) + this.f;
@@ -229,6 +230,7 @@ public class Strategy3 implements Strategy {
 					// OK, truncate:
 					newValue = DMatrixUtils.roundDoubleToClosest(trial[j], this.precision);
 				}
+				changed = changed || newValue != trial[j];
 				trial[j] = newValue;
 
 				// Move to the next element:
@@ -238,25 +240,28 @@ public class Strategy3 implements Strategy {
 				k++;
 			} while (probability.sample() < this.cr && k < population.getDimension());
 
-			// We will now check if we have a
-			// better candidate. If yes, we will replace the old member with the
-			// trial,
-			// if not we will just skip. Compute the score:
-			final double newScore = objective.apply(trial);
+			if (changed) {
+				// We will now check if we have a
+				// better candidate. If yes, we will replace the old member with
+				// the
+				// trial,
+				// if not we will just skip. Compute the score:
+				final double newScore = objective.apply(trial);
 
-			// Check the new score against the old one and act accordingly:
-			if (newScore < oldScore) {
-				// Yes, our trial is a better candidate. Replace:
-				newPopData[c] = trial;
-				newPopScores[c] = newScore;
-				newPopFlags[c] = true;
+				// Check the new score against the old one and act accordingly:
+				if (newScore < oldScore) {
+					// Yes, our trial is a better candidate. Replace:
+					newPopData[c] = trial;
+					newPopScores[c] = newScore;
+					newPopFlags[c] = true;
 
-				// We will now re-adjust for CR and F.
-				this.goodCR += this.cr / ++this.goodNPCount;
-				this.goodF += this.f;
-				this.goodF2 += Math.pow(this.f, 2);
-			} else {
-				newPopFlags[c] = false;
+					// We will now re-adjust for CR and F.
+					this.goodCR += this.cr / ++this.goodNPCount;
+					this.goodF += this.f;
+					this.goodF2 += Math.pow(this.f, 2);
+				} else {
+					newPopFlags[c] = false;
+				}
 			}
 		}
 
