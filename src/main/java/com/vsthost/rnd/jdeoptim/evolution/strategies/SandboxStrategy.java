@@ -159,7 +159,7 @@ public class SandboxStrategy implements Strategy {
 			boolean changed = false;
 			for (int i = 0; i < population.getDimension(); i++) {
 				// Any manipulation?
-				if (probability.sample() < this.cr) {
+				if (this.cr >= 1 || probability.sample() < this.cr) {
 					// Yes, we will proceed with a change:
 					double newValue = bestMember[i]
 							+ this.f * (probability.sample() + 0.0001) * (randomMember1[i] - randomMember2[i]);
