@@ -167,21 +167,10 @@ public class ParallelSimpleStrategy implements Strategy {
 		double[] newScores = new double[futures.length];
 		for (int i = 0; i < futures.length; i++) {
 			Future<Double> future = futures[i];
-			double newScore = getFuture(future);
+			double newScore = Utils.getFutureScore(future);
 			newScores[i] = newScore;
 		}
 		return newScores;
-	}
-
-	protected double getFuture(Future<Double> future) {
-		try {
-			return future.get();
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-			throw new RuntimeException(e);
-		} catch (ExecutionException e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 }
