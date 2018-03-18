@@ -34,7 +34,7 @@ public class SteadyScoreStopIteration implements StopIteration {
 					// we were not able to improve for a while, thus we can stop now
 					return true;
 				}
-			} else if (!assertImprovement || prevRoundedBestScore < roundedBestScore) {
+			} else if (!assertImprovement || prevRoundedBestScore > roundedBestScore) {
 				prevRoundedBestScore = roundedBestScore;
 				sameScoreCount = 0;
 			} else {

@@ -21,7 +21,7 @@ Dependency declaration:
 <dependency>
 	<groupId>com.vsthost.rnd</groupId>
 	<artifactId>jdeoptim</artifactId>
-	<version>0.0.8-inv</version>
+	<version>0.0.9-inv</version>
 </dependency>
 ```
 
