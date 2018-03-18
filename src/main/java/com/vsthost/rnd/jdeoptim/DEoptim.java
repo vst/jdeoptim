@@ -147,8 +147,6 @@ public class DEoptim {
 	public void evolve() {
 		// Check if the evolution is running for the second time.
 		if (this.diagnostics.hasStarted()) {
-			// TODO: Do we really want to halt? Just return? Or manage a
-			// stateless evolution for multiple runs?
 			throw new RuntimeException("The DE instance can run only once. Use convenience tools for multiple runs.");
 		}
 

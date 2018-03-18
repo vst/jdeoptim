@@ -16,18 +16,17 @@
 
 package com.vsthost.rnd.jdeoptim.evolution.strategies;
 
-import com.vsthost.rnd.commons.math.ext.linear.DMatrixUtils;
-import com.vsthost.rnd.jdeoptim.DEoptim;
-import com.vsthost.rnd.jdeoptim.evolution.Objective;
-import com.vsthost.rnd.jdeoptim.evolution.Population;
-import com.vsthost.rnd.jdeoptim.evolution.Problem;
-import com.vsthost.rnd.jdeoptim.utils.Utils;
-
 import org.apache.commons.math3.distribution.CauchyDistribution;
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.distribution.UniformIntegerDistribution;
 import org.apache.commons.math3.distribution.UniformRealDistribution;
 import org.apache.commons.math3.random.RandomGenerator;
+
+import com.vsthost.rnd.jdeoptim.DEoptim;
+import com.vsthost.rnd.jdeoptim.evolution.Objective;
+import com.vsthost.rnd.jdeoptim.evolution.Population;
+import com.vsthost.rnd.jdeoptim.evolution.Problem;
+import com.vsthost.rnd.jdeoptim.utils.Utils;
 
 /**
  * Defines a simple strategy.
@@ -236,11 +235,11 @@ public class Strategy3 implements Strategy {
 				// We have an interim trial. We will now truncate:
 				if (precision != 0) {
 					// OK, truncate:
-					newValue = DMatrixUtils.roundDoubleToClosest(trial[j], this.precision);
+					newValue = Utils.roundDoubleToClosest(trial[j], this.precision);
 				}
 				changed = changed || newValue != trial[j];
 				trial[j] = newValue;
-
+	
 				// Move to the next element:
 				j = (j + 1) % population.getDimension();
 

@@ -209,4 +209,38 @@ public class Utils {
 			throw new RuntimeException(e);
 		}
 	}
+	
+    /**
+     * Returns the closest rounded value of the given value for the given steps.
+     *
+     * @param value The original value to be rounded.
+     * @param steps The steps.
+     * @return The closest rounded value of the given value for the given steps.
+     */
+    public static double roundDoubleToClosest (double value, double steps) {
+        final double down = roundDoubleDownTo(value, steps);
+        final double up = roundDoubleUpTo(value, steps);
+        if (Math.abs(value - down) < Math.abs(value - up)) {
+            return down;
+        }
+        return up;
+    }
+
+    private static double roundDoubleDownTo(double value, double steps) {
+        if (steps == 0) {
+            return value;
+        }
+        else {
+            return Math.floor(value / steps) * steps;
+        }
+    }
+
+    private static double roundDoubleUpTo(double value, double steps) {
+        if (steps == 0) {
+            return value;
+        }
+        else {
+            return Math.ceil(value / steps) * steps;
+		}
+	}
 }
