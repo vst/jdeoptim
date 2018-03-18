@@ -16,13 +16,14 @@
 
 package com.vsthost.rnd.jdeoptim.evolution.strategies;
 
+import org.apache.commons.math3.distribution.UniformRealDistribution;
+import org.apache.commons.math3.random.RandomGenerator;
+
 import com.vsthost.rnd.jdeoptim.DEoptim;
 import com.vsthost.rnd.jdeoptim.evolution.Objective;
 import com.vsthost.rnd.jdeoptim.evolution.Population;
 import com.vsthost.rnd.jdeoptim.evolution.Problem;
 import com.vsthost.rnd.jdeoptim.utils.Utils;
-import org.apache.commons.math3.distribution.UniformRealDistribution;
-import org.apache.commons.math3.random.RandomGenerator;
 
 /**
  * Defines a simple strategy.
@@ -68,10 +69,16 @@ public class SimpleStrategy implements Strategy {
 	@Override
 	public void regenerate(final Population population, final Problem problem, final Objective objective) {
 		// Get the best member of the population:
+		final int bestMemberIndex = population.getBestIndex();
 		final double[] bestMember = population.getBestMember();
 
 		// Iterate over the current population:
 		for (int c = 0; c < population.getSize(); c++) {
+			if(c == bestMemberIndex) {
+				// Don't modify the best index so we don't degrade score
+				continue;
+			}
+			
 			// Get the candidate as the base of the next candidate (a.k.a.
 			// trial):
 

@@ -16,6 +16,10 @@
 
 package com.vsthost.rnd;
 
+import org.apache.commons.math3.distribution.UniformRealDistribution;
+import org.apache.commons.math3.random.MersenneTwister;
+import org.junit.Test;
+
 import com.vsthost.rnd.jdeoptim.DEoptim;
 import com.vsthost.rnd.jdeoptim.diagnostics.Diagnostics;
 import com.vsthost.rnd.jdeoptim.evolution.Objective;
@@ -23,9 +27,6 @@ import com.vsthost.rnd.jdeoptim.evolution.Population;
 import com.vsthost.rnd.jdeoptim.evolution.Problem;
 import com.vsthost.rnd.jdeoptim.evolution.strategies.SandboxStrategy;
 import com.vsthost.rnd.jdeoptim.evolution.strategies.Strategy;
-import org.apache.commons.math3.distribution.UniformRealDistribution;
-import org.apache.commons.math3.random.MersenneTwister;
-import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 

@@ -179,6 +179,7 @@ public class ParallelStrategy3 implements Strategy {
 				population.getDimension() - 1);
 
 		// Get the best member of the population:
+		final int bestMemberIndex = population.getBestIndex();
 		final double[] bestMember = population.getBestMember();
 
 		// Define the new population data and scores as we don't want to
@@ -191,6 +192,11 @@ public class ParallelStrategy3 implements Strategy {
 		List<double[]> trials = new ArrayList<double[]>(population.getSize());
 		List<Integer> trialIndexes = new ArrayList<Integer>(population.getSize());
 		for (int c = 0; c < population.getSize(); c++) {
+			if(c == bestMemberIndex) {
+				// Don't modify the best index so we don't degrade score
+				continue;
+			}
+			
 			// Are we going to adjust CR and F?
 			if (this.c > 0) {
 				// Yes. We will not adjust the CR first:

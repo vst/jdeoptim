@@ -16,8 +16,9 @@
 
 package com.vsthost.rnd.jdeoptim.diagnostics;
 
-import com.vsthost.rnd.jdeoptim.evolution.Population;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
+import com.vsthost.rnd.jdeoptim.evolution.Population;
 
 import java.util.ArrayList;
 import java.util.Arrays;

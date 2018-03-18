@@ -16,8 +16,9 @@
 
 package com.vsthost.rnd.jdeoptim.evolution;
 
-import com.vsthost.rnd.jdeoptim.utils.Utils;
 import org.apache.commons.math3.distribution.RealDistribution;
+
+import com.vsthost.rnd.jdeoptim.utils.Utils;
 
 import java.util.Arrays;
 

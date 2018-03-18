@@ -16,19 +16,16 @@
 
 package com.vsthost.rnd.jdeoptim.utils;
 
-import org.apache.commons.math3.distribution.RealDistribution;
-import org.apache.commons.math3.random.RandomGenerator;
-import org.apache.commons.math3.util.MathArrays;
-
-import com.vsthost.rnd.jdeoptim.evolution.Problem;
-
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.stream.IntStream;
+
+import org.apache.commons.math3.distribution.RealDistribution;
+import org.apache.commons.math3.random.RandomGenerator;
+
+import com.vsthost.rnd.jdeoptim.evolution.Problem;
 
 /**
  * Provides some utility functions used throughout the library.
@@ -66,7 +63,6 @@ public class Utils {
 				final double max = upper[d];
 
 				// Create a random value within the range:
-				// TODO: For better performance, memoize (max - min).
 				population[c][d] = min + ((max - min) * distribution.sample());
 			}
 		}
@@ -149,35 +145,6 @@ public class Utils {
 
 		// Done, return:
 		return vector;
-	}
-
-	/**
-	 * Returns random elements from the set.
-	 *
-	 * @param set
-	 *            The set to be chosen from.
-	 * @param n
-	 *            The number of elements to be returned.
-	 * @param exclude
-	 *            Elements to be excluded.
-	 * @param randomGenerator
-	 *            The random number generator.
-	 * @return Random elements.
-	 */
-	@Deprecated(/* this implementation is very slow */)
-	public static int[] pickRandom(int[] set, int n, int[] exclude, RandomGenerator randomGenerator) {
-		// Create a set from excluded:
-		final Set<Integer> toExclude = new HashSet<>();
-		Arrays.stream(exclude).forEach(toExclude::add);
-
-		// Create set out of elements:
-		int[] newSet = Arrays.stream(set).filter(e -> !toExclude.contains(e)).toArray();
-
-		// Shuffle the set:
-		MathArrays.shuffle(newSet, randomGenerator);
-
-		// Get n elements and return:
-		return Arrays.copyOf(newSet, n);
 	}
 
 	/**
