@@ -8,7 +8,7 @@ public abstract class SteadyResultAvgOptimizationLoop {
     private final long sameResultPrecisionMultiplier = (long) Math.pow(10, newSameResultPrecision());
     private final long sameResultTolerance = newSameResultTolerance();
     private final int sameResultCount = newSameResultCount();
-    private final int maxTries = newMaxTries();
+    private final int maxFailedTries = newMaxFailedTries();
 
     protected int newSameResultCount() {
         return 2;
@@ -22,7 +22,7 @@ public abstract class SteadyResultAvgOptimizationLoop {
         return 10;
     }
 
-    private int newMaxTries() {
+    private int newMaxFailedTries() {
         return 10;
     }
 
@@ -30,12 +30,16 @@ public abstract class SteadyResultAvgOptimizationLoop {
         final List<double[]> validResults = new ArrayList<double[]>();
         final List<double[]> sameResults = new ArrayList<double[]>();
         double[] prevResult = null;
-        int tries = 0;
+        int failedTries = 0;
         while (true) {
             final double[] result = optimize();
             if (isValidResult(result)) {
                 validResults.add(result);
             } else {
+            	failedTries++;
+                if (failedTries >= maxFailedTries) {
+                    return newTriesExceededResult(validResults);
+                }
                 continue;
             }
             if (prevResult == null) {
@@ -47,8 +51,8 @@ public abstract class SteadyResultAvgOptimizationLoop {
                     return avgResult;
                 }
             } else {
-                tries++;
-                if (tries >= maxTries) {
+                failedTries++;
+                if (failedTries >= maxFailedTries) {
                     return newTriesExceededResult(validResults);
                 }
                 sameResults.clear();
